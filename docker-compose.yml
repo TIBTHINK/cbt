@@ -23,7 +23,7 @@ services:
       - MYSQL_HOST=db
       - MYSQL_USER=tibthink
       - MYSQL_PASSWORD=Halsnewram!18
-      - MYSQL_DATABASE=mydb
+      - MYSQL_DATABASE=counter_db
     depends_on:
       - db
     command: npx nodemon ./server.js 
