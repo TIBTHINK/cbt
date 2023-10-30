@@ -22,19 +22,19 @@ app.use(bodyParser.json());
 //     database: 'counter_db'
 // };
 
-const dbConfig = {
-    host: 'db',
-    user: 'root',
-    password: 'Halsnewram',
-    database: 'counter_db'
-};
+// const dbConfig = {
+//     host: 'db',
+//     user: 'root',
+//     password: 'Halsnewram',
+//     database: 'counter_db'
+// };
 let connection;
 
 async function initializeDatabase() {
     connection = await mysql.createConnection({
         host: 'db',
-        user: 'tibthink',
-        password: 'Halsnewram!18'
+        user: 'root',
+        password: 'Halsnewram',
     });
 
     await connection.query('CREATE DATABASE IF NOT EXISTS counter_db');
