@@ -23,9 +23,16 @@ const dbConfig = {
 };
 
 let connection;
-
+// if counter_db does not exist, create it and create the counter table
 async function initializeDatabase() {
-    connection = await mysql.createConnection(dbConfig);
+    connection = await mysql.createConnection({
+        host: 'db',
+        user: 'tibthink',
+        password: 'Halsnewram!18'
+    });
+
+    await connection.query('CREATE DATABASE IF NOT EXISTS counter_db');
+    await connection.query('USE counter_db');
     await connection.query(`
         CREATE TABLE IF NOT EXISTS counter (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -38,6 +45,7 @@ async function initializeDatabase() {
         await connection.query("INSERT INTO counter (value) VALUES (0)");
     }
 }
+
 
 initializeDatabase();
 
