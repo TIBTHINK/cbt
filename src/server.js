@@ -15,13 +15,19 @@ app.use(bodyParser.json());
 
 
 
+// const dbConfig = {
+//     host: 'db',
+//     user: 'tibthink',
+//     password: 'Halsnewram!18',
+//     database: 'counter_db'
+// };
+
 const dbConfig = {
     host: 'db',
-    user: 'tibthink',
-    password: 'Halsnewram!18',
+    user: 'root',
+    password: 'Halsnewram',
     database: 'counter_db'
 };
-
 let connection;
 // if counter_db does not exist, create it and create the counter table
 // async function initializeDatabase() {
