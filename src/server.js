@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Button Counter</title>
+        <title>Cancel Ben Tsardoulias</title>
     </head>
     
     <!-- add css with the content being in the center of the page  -->
@@ -105,7 +105,7 @@ app.get('/', (req, res) => {
         </div>
         
     
-        <!-- <script>
+        <script>
             async function fetchCurrentCount() {
                 try {
                     const response = await fetch('/current-count');
@@ -123,7 +123,7 @@ app.get('/', (req, res) => {
                 const data = await response.json();
                 document.getElementById('counter').textContent = data.value;
             }
-        </script> -->
+        </script>
     </body>
     </html>
     `);
