@@ -72,6 +72,24 @@ app.get('/', (req, res) => {
             color: white;
             cursor: pointer;
         }
+        button:hover {
+            background-color: #0C62AB;
+        }
+        /* add mobile version */
+        @media only screen and (max-width: 600px) {
+            .container {
+                height: 100%;
+            }
+            .title {
+                font-size: 1.5em;
+            }
+            .counter {
+                font-size: 1em;
+            }
+            button {
+                font-size: 1em;
+            }
+        }
     </style>
     
     
@@ -83,11 +101,11 @@ app.get('/', (req, res) => {
                 <h1>CANCEL BEN TSARDOULIAS</h1>
             </div>
             <div class="counter">I have been canceled <span id="counter">0</span> times</div>
-            <button onclick="incrementCounter()">Cancel me</button>
+            <button onclick="incrementCounter()">Click me</button>
         </div>
         
     
-        <script>
+        <!-- <script>
             async function fetchCurrentCount() {
                 try {
                     const response = await fetch('/current-count');
@@ -105,7 +123,7 @@ app.get('/', (req, res) => {
                 const data = await response.json();
                 document.getElementById('counter').textContent = data.value;
             }
-        </script>
+        </script> -->
     </body>
     </html>
     `);
