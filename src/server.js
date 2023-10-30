@@ -101,7 +101,7 @@ app.get('/', (req, res) => {
                 <h1>CANCEL BEN TSARDOULIAS</h1>
             </div>
             <div class="counter">I have been canceled <span id="counter">0</span> times</div>
-            <button onclick="incrementCounter()">Click me</button>
+            <button onclick="incrementCounter()">Cancel me</button>
         </div>
         
     
