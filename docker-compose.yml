@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: Halsnewram
+      MYSQL_USER: tibthink
+      MYSQL_PASSWORD: Halsnewram!18
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  nodejs:
+    image: node:latest
+    working_dir: /app
+    volumes:
+      - ./src:/app
+    ports:
+      - "3000:80"
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=tibthink
+      - MYSQL_PASSWORD=Halsnewram!18
+      - MYSQL_DATABASE=mydb
+    depends_on:
+      - db
+    command: npx nodemon ./server.js localhost 3000
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: Halsnewram
+    ports:
+      - "8080:80"
+    depends_on:
+      - db

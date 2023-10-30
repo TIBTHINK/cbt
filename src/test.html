@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Counter</title>
+</head>
+
+<!-- add css with the content being in the center of the page  -->
+<style>
+    
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .title {
+        font-family: ubuntu;
+        font-size: large;
+        margin-bottom: 50px;
+    }
+
+    .counter {
+        font-size: 1.5em;
+        margin-bottom: 30px;
+    }
+    button {
+        font-size: 1.5em;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #098BDB;
+        color: white;
+        cursor: pointer;
+    }
+</style>
+
+
+
+<body onload="fetchCurrentCount()">
+    <div class="container">
+
+        <div class="title">
+            <h1>CANCEL BEN TSARDOULIAS</h1>
+        </div>
+        <div class="counter">I have been canceled <span id="counter">0</span> times</div>
+        <button onclick="incrementCounter()">Click me</button>
+    </div>
+    
+
+    <!-- <script>
+        async function fetchCurrentCount() {
+            try {
+                const response = await fetch('/current-count');
+                const data = await response.json();
+                document.getElementById('counter').textContent = data.value;
+            } catch (error) {
+                console.error('Failed to fetch current count:', error);
+            }
+        }
+
+        async function incrementCounter() {
+            const response = await fetch('/increment', {
+                method: 'POST',
+            });
+            const data = await response.json();
+            document.getElementById('counter').textContent = data.value;
+        }
+    </script> -->
+</body>
+</html>
