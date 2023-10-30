@@ -1,12 +1,19 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
-
+const http = require('http');
 const app = express();
+const server = http.createServer(app);
+const io = require('socket.io')(server);
+
+
+
 console.log('Cancel Ben Tsardoulias counter is online and...');
 
 // For parsing application/json
 app.use(bodyParser.json());
+
+
 
 const dbConfig = {
     host: 'db',
@@ -39,6 +46,8 @@ app.get('/', (req, res) => {
     <!DOCTYPE html>
     <html>
     <head>
+    <script src="/socket.io/socket.io.js"></script>
+
         <title>Cancel Ben Tsardoulias</title>
     </head>
     
@@ -75,6 +84,12 @@ app.get('/', (req, res) => {
         button:hover {
             background-color: #0C62AB;
         }
+        .buttons-container {
+            
+
+        
+
+        }
         /* add mobile version */
         @media only screen and (max-width: 600px) {
             .container {
@@ -101,11 +116,25 @@ app.get('/', (req, res) => {
                 <h1>CANCEL BEN TSARDOULIAS</h1>
             </div>
             <div class="counter">I have been canceled <span id="counter">0</span> times</div>
-            <button onclick="incrementCounter()">Cancel me</button>
+            <div class="buttons-container">
+                <button onclick="incrementCounter()">Cancel me</button>
+                <!-- add a 3 buttons  -->
+                <button onclick="incrementCounter(5)">Cancel me 5 </button>
+                <button onclick="incrementCounter(10)">Cancel me 10</button>
+                <button onclick="incrementCounter(25)">Cancel me 25</button>
+            </div>
         </div>
         
     
         <script>
+            const socket = io();
+
+            // Listen for counterUpdated event from the server
+            socket.on('counterUpdated', (data) => {
+                document.getElementById('counter').textContent = data.value;
+            });
+
+
             async function fetchCurrentCount() {
                 try {
                     const response = await fetch('/current-count');
@@ -115,15 +144,40 @@ app.get('/', (req, res) => {
                     console.error('Failed to fetch current count:', error);
                 }
             }
-    
-            async function incrementCounter() {
-                const response = await fetch('/increment', {
-                    method: 'POST',
-                });
-                const data = await response.json();
-                document.getElementById('counter').textContent = data.value;
+
+            async function incrementCounter(amount = 1) {  
+                const counterElem = document.getElementById('counter');
+                const currentCount = parseInt(counterElem.textContent, 10);
+            
+                try {
+                    const response = await fetch('/increment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ amount: amount })  
+                    });
+                    
+                    const data = await response.json();
+                    
+                    let displayedCount = currentCount;
+                    const updateInterval = setInterval(() => {
+                        if (displayedCount < data.value) {
+                            displayedCount++;
+                            counterElem.textContent = displayedCount;
+                        } else {
+                            clearInterval(updateInterval);
+                        }
+                    }, 2);  
+                } catch (error) {
+                    console.error('Failed to update count:', error);
+                }
             }
+            
+            
+    
         </script>
+
     </body>
     </html>
     `);
@@ -141,9 +195,11 @@ app.get('/current-count', async (req, res) => {
 
 
 app.post('/increment', async (req, res) => {
+    const amount = req.body.amount || 1; // default to 1 if amount is not provided
     try {
-        await connection.query("UPDATE counter SET value = value + 1 WHERE id = 1");
+        await connection.query(`UPDATE counter SET value = value + ${amount} WHERE id = 1`);
         const [rows] = await connection.query("SELECT value FROM counter WHERE id = 1");
+        io.emit('counterUpdated', { value: rows[0].value });
         res.json({ value: rows[0].value });
     } catch (err) {
         console.error(err);
@@ -151,9 +207,11 @@ app.post('/increment', async (req, res) => {
     }
 });
 
+
 const PORT = 80;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 
 console.log('...running!');

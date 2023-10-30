@@ -2,7 +2,7 @@
 
 # Default values
 commit_message="Automated commit"
-branch="dev"
+branch="main"
 new_branch=false
 add_all=false
 show_diff=false

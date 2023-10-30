@@ -18,7 +18,7 @@ services:
     volumes:
       - ./src:/app
     ports:
-      - "80:80"
+      - "3000:80"
     environment:
       - MYSQL_HOST=db
       - MYSQL_USER=tibthink
@@ -26,7 +26,7 @@ services:
       - MYSQL_DATABASE=mydb
     depends_on:
       - db
-    command: npx nodemon ./server.js localhost 3000
+    command: npx nodemon ./server.js 
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
