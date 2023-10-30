@@ -7,8 +7,10 @@ services:
       MYSQL_ROOT_PASSWORD: Halsnewram
       MYSQL_USER: tibthink
       MYSQL_PASSWORD: Halsnewram!18
+      MYSQL_DATABASE: counter_db
     volumes:
       - ./data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the SQL script
     ports:
       - "3306:3306"
 
