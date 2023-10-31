@@ -188,60 +188,80 @@ app.get('/', (req, res) => {
             document.getElementById('counter').textContent = data.value;
             progressBar.value = data.value;
 
-            const percentage = Math.floor((data.value / progressBar.max) * 100);
+            const percentage = Math.floor((data.value / progressBar.max) * 100.00);
             percentageSpan.textContent = percentage + "%"; // Use the variable here
         });
 
     
-            async function fetchCurrentCount() {
-                try {
-                    const response = await fetch('/current-count');
-                    const data = await response.json();
-    
-                    let displayedCount = 0;
-                    const counterElem = document.getElementById('counter');
-    
-                    const updateInterval = setInterval(() => {
-                        if (displayedCount < data.value) {
-                            displayedCount++;
-                            counterElem.textContent = displayedCount;
-                        } else {
-                            clearInterval(updateInterval);
-                        }
-                    }, 10);
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-    
-            async function incrementCounter(amount = 1) {  
+        async function fetchCurrentCount() {
+            try {
+                const response = await fetch('/current-count');
+                const data = await response.json();
+        
+                let displayedCount = 0;
                 const counterElem = document.getElementById('counter');
-                const currentCount = parseInt(counterElem.textContent, 10);
-            
-                try {
-                    const response = await fetch('/increment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ amount: amount })  
-                    });
-                    
-                    const data = await response.json();
-                    
-                    let displayedCount = currentCount;
-                    const updateInterval = setInterval(() => {
-                        if (displayedCount < data.value) {
-                            displayedCount++;
-                            counterElem.textContent = displayedCount;
-                        } else {
-                            clearInterval(updateInterval);
-                        }
-                    }, 2);  
-                } catch (error) {
-                    console.error('Failed to update count:', error);
+        
+                function updateCounter() {
+                    // Calculate the remaining difference
+                    const difference = data.value - displayedCount;
+                    // Adjust the speed based on the remaining difference. The larger the difference, the bigger the step.
+                    const step = Math.max(1, Math.ceil(difference * 0.25)); // 5% of the remaining difference
+        
+                    if (displayedCount + step < data.value) {
+                        displayedCount += step;
+                        counterElem.textContent = displayedCount;
+                        // Use setTimeout instead of setInterval for dynamic intervals
+                        setTimeout(updateCounter, 50);
+                    } else {
+                        counterElem.textContent = data.value; // directly set the final value
+                    }
                 }
+        
+                updateCounter();
+        
+            } catch (error) {
+                console.error(error);
             }
+        }
+        
+        async function incrementCounter(amount = 1) {  
+            const counterElem = document.getElementById('counter');
+            const currentCount = parseInt(counterElem.textContent, 10);
+        
+            try {
+                const response = await fetch('/increment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount: amount })  
+                });
+                
+                const data = await response.json();
+                
+                let displayedCount = currentCount;
+        
+                function updateCounter() {
+                    // Same logic as above
+                    const difference = data.value - displayedCount;
+                    const step = Math.max(1, Math.ceil(difference * 0.05)); 
+        
+                    if (displayedCount + step < data.value) {
+                        displayedCount += step;
+                        counterElem.textContent = displayedCount;
+                        setTimeout(updateCounter, 50);
+                    } else {
+                        counterElem.textContent = data.value;
+                    }
+                }
+        
+                updateCounter();
+        
+            } catch (error) {
+                console.error('Failed to update count:', error);
+            }
+        }
+        
         </script>
     </body>
     
