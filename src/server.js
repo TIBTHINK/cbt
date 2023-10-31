@@ -54,20 +54,7 @@ async function initializeDatabase() {
 
 
 
-// async function initializeDatabase() {
-//     connection = await mysql.createConnection(dbConfig);
-//     await connection.query(`
-//         CREATE TABLE IF NOT EXISTS counter (
-//             id INT AUTO_INCREMENT PRIMARY KEY,
-//             value INT DEFAULT 0 
-//         );
-//     `);
 
-//     const [rows] = await connection.query("SELECT * FROM counter");
-//     if (rows.length === 0) {
-//         await connection.query("INSERT INTO counter (value) VALUES (0)");
-//     }
-// }
 
 initializeDatabase();
 
@@ -75,15 +62,14 @@ app.get('/', (req, res) => {
     res.send(`
     <!DOCTYPE html>
     <html>
+    
     <head>
-    <script src="/socket.io/socket.io.js"></script>
-
+        <script src="/socket.io/socket.io.js"></script>
+    
         <title>Cancel Ben Tsardoulias</title>
     </head>
-    
     <!-- add css with the content being in the center of the page  -->
     <style>
-        
         .container {
             display: flex;
             flex-direction: column;
@@ -102,6 +88,7 @@ app.get('/', (req, res) => {
             font-size: 1.5em;
             margin-bottom: 30px;
         }
+    
         button {
             font-size: 1.5em;
             padding: 10px 20px;
@@ -111,70 +98,122 @@ app.get('/', (req, res) => {
             color: white;
             cursor: pointer;
         }
+    
         button:hover {
             background-color: #0C62AB;
         }
+    
         .buttons-container {
-            
-
-        
-
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
         }
+    
+        .progress-container {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 30px;
+        }
+    
+        progress {
+            width: 100%;
+            height: 30px;
+            appearance: none;
+            border: none;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+    
+        progress::-webkit-progress-bar {
+            background-color: #eee;
+            border-radius: 5px;
+        }
+    
+        progress::-webkit-progress-value {
+            background-color: #098BDB;
+            border-radius: 5px;
+        }
+    
         /* add mobile version */
         @media only screen and (max-width: 600px) {
             .container {
                 height: 100%;
             }
+    
             .title {
                 font-size: 1.5em;
             }
+    
             .counter {
                 font-size: 1em;
             }
+    
             button {
                 font-size: 1em;
             }
+    
         }
     </style>
     
-    
-    
     <body onload="fetchCurrentCount()">
         <div class="container">
-    
             <div class="title">
                 <h1>CANCEL BEN TSARDOULIAS</h1>
             </div>
             <div class="counter">I have been canceled <span id="counter">0</span> times</div>
+            <div class="progress-container">
+                <progress id="progress-bar" value="" max="1000000"></progress>
+                <span id="progress-percentage" class="progress-percentage"></span>
+            </div>
+    
             <div class="buttons-container">
                 <button onclick="incrementCounter()">Cancel me</button>
-                <!-- add a 3 buttons  -->
                 <button onclick="incrementCounter(5)">Cancel me 5 </button>
                 <button onclick="incrementCounter(10)">Cancel me 10</button>
                 <button onclick="incrementCounter(25)">Cancel me 25</button>
             </div>
         </div>
-        
     
+        
         <script>
             const socket = io();
+            const progressBar = document.getElementById('progress-bar');
+            const percentageSpan = document.getElementById('progress-percentage'); // Define it here
+
 
             // Listen for counterUpdated event from the server
             socket.on('counterUpdated', (data) => {
-                document.getElementById('counter').textContent = data.value;
-            });
+            document.getElementById('counter').textContent = data.value;
+            progressBar.value = data.value;
 
+            const percentage = Math.floor((data.value / progressBar.max) * 100);
+            percentageSpan.textContent = percentage + "%"; // Use the variable here
+        });
 
+    
             async function fetchCurrentCount() {
                 try {
                     const response = await fetch('/current-count');
                     const data = await response.json();
-                    document.getElementById('counter').textContent = data.value;
+    
+                    let displayedCount = 0;
+                    const counterElem = document.getElementById('counter');
+    
+                    const updateInterval = setInterval(() => {
+                        if (displayedCount < data.value) {
+                            displayedCount++;
+                            counterElem.textContent = displayedCount;
+                        } else {
+                            clearInterval(updateInterval);
+                        }
+                    }, 10);
                 } catch (error) {
-                    console.error('Failed to fetch current count:', error);
+                    console.error(error);
                 }
             }
-
+    
             async function incrementCounter(amount = 1) {  
                 const counterElem = document.getElementById('counter');
                 const currentCount = parseInt(counterElem.textContent, 10);
@@ -203,12 +242,9 @@ app.get('/', (req, res) => {
                     console.error('Failed to update count:', error);
                 }
             }
-            
-            
-    
         </script>
-
     </body>
+    
     </html>
     `);
 });
@@ -222,6 +258,8 @@ app.get('/current-count', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+
 
 
 app.post('/increment', async (req, res) => {
