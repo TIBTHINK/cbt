@@ -65,7 +65,7 @@ app.get('/', (req, res) => {
 });
     
         
-
+app.use(express.static('public'));
 
 app.get('/current-count', async (req, res) => {
     try {
