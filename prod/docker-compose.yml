@@ -13,7 +13,7 @@ services:
       - "3306:3306"
 
   nodejs:
-    image: node:latest
+    image: ./docker/DockerfileNodejs
     working_dir: /app
     volumes:
       - ../src:/app
@@ -26,5 +26,7 @@ services:
       - MYSQL_DATABASE=mydb
     depends_on:
       - db
-    command: nodejs start ../server.js 
+      
+    command: ["./wait-for-it.sh", "db:3306", "--", "npx", "nodemon", "./server.js"]
+
 

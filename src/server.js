@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 //     password: 'Halsnewram!18',
 //     database: 'counter_db'
 // };
-
+ 
 const dbConfig = {
     host: 'db',
     user: 'root',
@@ -34,6 +34,11 @@ let connection;
 
 async function initializeDatabase() {
     connection = await mysql.createConnection(dbConfig);
+    // if connection failed retry every 2 seconds
+    connection.on('error', (err) => {
+        console.error(err);
+        setTimeout(initializeDatabase, 2000);
+    });
     await connection.query(`
         CREATE TABLE IF NOT EXISTS counter (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -47,7 +52,7 @@ async function initializeDatabase() {
     }
 }
 
-
+ 
 
 
 
@@ -131,24 +136,116 @@ app.get('/', (req, res) => {
             border-radius: 5px;
         }
     
+        .counter {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #098BDB;
+        }
+    
+        .day-counter {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* height: 100vh; */
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            font-weight: bold;
+            font-family: ubuntu;
+            color: black;
+    
+        }
+    
         /* add mobile version */
+        
         @media only screen and (max-width: 600px) {
             .container {
-                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
             }
     
             .title {
-                font-size: 1.5em;
+                font-family: ubuntu;
+                font-size: large;
+                margin-bottom: 50px;
             }
     
             .counter {
-                font-size: 1em;
+                font-size: 1.5em;
+                margin-bottom: 30px;
             }
     
             button {
-                font-size: 1em;
+                font-size: 1.5em;
+                padding: 10px 20px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                background-color: #098BDB;
+                color: white;
+                cursor: pointer;
             }
     
+            button:hover {
+                background-color: #0C62AB;
+            }
+    
+            .buttons-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+                max-width: 400px;
+            }
+    
+            .progress-container {
+                width: 100%;
+                max-width: 400px;
+                margin-bottom: 30px;
+            }
+    
+            progress {
+                width: 100%;
+                height: 30px;
+                appearance: none;
+                border: none;
+                border-radius: 5px;
+                background-color: #eee;
+            }
+    
+            progress::-webkit-progress-bar {
+                background-color: #eee;
+                border-radius: 5px;
+            }
+    
+            progress::-webkit-progress-value {
+                background-color: #098BDB;
+                border-radius: 5px;
+            }
+    
+            .counter {
+                font-size: 1.5em;
+                margin-bottom: 30px;
+                font-weight: bold;
+                color: #098BDB;
+            }
+    
+            .day-counter {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                /* height: 100vh; */
+                font-size: 1.5em;
+                margin-bottom: 30px;
+                font-weight: bold;
+                font-family: ubuntu;
+                color: black;
+    
+            }
         }
     </style>
     
@@ -171,92 +268,102 @@ app.get('/', (req, res) => {
             </div>
         </div>
     
-        
         <script>
-            const socket = io();
-            const progressBar = document.getElementById('progress-bar');
-            const percentageSpan = document.getElementById('progress-percentage'); // Define it here
-
-
-            // Listen for counterUpdated event from the server
-            socket.on('counterUpdated', (data) => {
-            document.getElementById('counter').textContent = data.value;
-            progressBar.value = data.value;
-
-            const percentage = Math.floor((data.value / progressBar.max) * 100.00);
-            percentageSpan.textContent = percentage + "%"; // Use the variable here
-        });
-
+            function getDaysSince() {
+                const startDate = new Date("October 29, 2023");
+                const currentDate = new Date();
+                const timeDiff = Math.abs(currentDate.getTime() - startDate.getTime());
+                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                return daysDiff;
+            }
     
-        async function fetchCurrentCount() {
-            try {
-                const response = await fetch('/current-count');
-                const data = await response.json();
-        
-                let displayedCount = 0;
+            document.addEventListener("DOMContentLoaded", function () {
+                const daysSince = getDaysSince();
+                document.getElementById("days-since").textContent = daysSince;
+            });
+        </script>
+    
+        <body>
+            <div class="day-counter">
+                It has been <span id="days-since"></span> days since this has been running
+            </div>
+        </body>
+    
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            
+                const socket = io();
+                const progressBar = document.getElementById('progress-bar');
+                const percentageSpan = document.getElementById('progress-percentage'); // Define it here
+    
+    
+                // Listen for counterUpdated event from the server
+                socket.on('counterUpdated', (data) => {
+                document.getElementById('counter').textContent = data.value;
+                progressBar.value = data.value;
+    
+                const percentage = Math.floor((data.value / progressBar.max) * 100.00);
+                percentageSpan.textContent = percentage + "%"; // Use the variable here
+            });
+    
+            async function fetchCurrentCount() {
+                try {
+                    const response = await fetch('/current-count');
+                    const data = await response.json();
+    
+                    let displayedCount = 0;
+                    const counterElem = document.getElementById('counter');
+    
+                    const updateInterval = setInterval(() => {
+                        if (displayedCount < data.value) {
+                            displayedCount++;
+                            counterElem.textContent = displayedCount;
+                        } else {
+                            clearInterval(updateInterval);
+                        }
+                    }, 10);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+    
+            async function incrementCounter(amount = 1) {  
                 const counterElem = document.getElementById('counter');
-        
-                function updateCounter() {
-                    // Calculate the remaining difference
-                    const difference = data.value - displayedCount;
-                    // Adjust the speed based on the remaining difference. The larger the difference, the bigger the step.
-                    const step = Math.max(1, Math.ceil(difference * 0.25)); // 5% of the remaining difference
-        
-                    if (displayedCount + step < data.value) {
-                        displayedCount += step;
-                        counterElem.textContent = displayedCount;
-                        // Use setTimeout instead of setInterval for dynamic intervals
-                        setTimeout(updateCounter, 50);
-                    } else {
-                        counterElem.textContent = data.value; // directly set the final value
+                const currentCount = parseInt(counterElem.textContent, 10);
+            
+                try {
+                    const response = await fetch('/increment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ amount: amount })  
+                    });
+                    
+                    const data = await response.json();
+                    
+                    let displayedCount = currentCount;
+            
+                    function updateCounter() {
+                        // Same logic as above
+                        const difference = data.value - displayedCount;
+                        const step = Math.max(1, Math.ceil(difference * 0.05)); 
+            
+                        if (displayedCount + step < data.value) {
+                            displayedCount += step;
+                            counterElem.textContent = displayedCount;
+                            setTimeout(updateCounter, 50);
+                        } else {
+                            counterElem.textContent = data.value;
+                        }
                     }
+            
+                    updateCounter();
+            
+                } catch (error) {
+                    console.error('Failed to update count:', error);
                 }
-        
-                updateCounter();
-        
-            } catch (error) {
-                console.error(error);
             }
-        }
-        
-        async function incrementCounter(amount = 1) {  
-            const counterElem = document.getElementById('counter');
-            const currentCount = parseInt(counterElem.textContent, 10);
-        
-            try {
-                const response = await fetch('/increment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ amount: amount })  
-                });
-                
-                const data = await response.json();
-                
-                let displayedCount = currentCount;
-        
-                function updateCounter() {
-                    // Same logic as above
-                    const difference = data.value - displayedCount;
-                    const step = Math.max(1, Math.ceil(difference * 0.05)); 
-        
-                    if (displayedCount + step < data.value) {
-                        displayedCount += step;
-                        counterElem.textContent = displayedCount;
-                        setTimeout(updateCounter, 50);
-                    } else {
-                        counterElem.textContent = data.value;
-                    }
-                }
-        
-                updateCounter();
-        
-            } catch (error) {
-                console.error('Failed to update count:', error);
-            }
-        }
-        
         </script>
     </body>
     
