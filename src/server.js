@@ -13,7 +13,13 @@ console.log('Cancel Ben Tsardoulias counter is online and...');
 // For parsing application/json
 app.use(bodyParser.json());
 
+let counter = 0; // replace this with your actual initial value
 
+io.on('connection', (socket) => {
+    // Emit initialData event with the initial data
+    socket.emit('initialData', { value: counter });
+
+});
 
 // const dbConfig = {
 //     host: 'db',
@@ -61,7 +67,7 @@ initializeDatabase();
 const path = require('path');
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public/html/index.html'));
 });
     
         
