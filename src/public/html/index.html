@@ -50,6 +50,13 @@
 
     <script>
 
+        const socket = io.connect('http://localhost:3001');
+
+        socket.on('counterUpdated', function (data) {
+            // Update the counter here
+            document.getElementById("counter").textContent = numberWithCommas(data.value);
+        });
+
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
@@ -172,15 +179,40 @@
         }
 
         // This should be inside an async function or then block where `data` is available
-        document.addEventListener("DOMContentLoaded", function () {
-            // This interval is only responsible for updating the "days since" text
-            setInterval(function () {
-                const timeSince = getTimeSince();
-                const daysSinceText = `${timeSince.days} days, ${timeSince.hours} hours, ${timeSince.minutes} minutes, ${timeSince.seconds} seconds`;
-                document.getElementById("days-since").textContent = daysSinceText;
-                document.getElementById("counter").textContent = numberWithCommas(data.value);
-            }, 1000);
-        });
+        document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        const response = await fetch('/api');
+        const data = await response.json();
+
+        if (data.value !== undefined) {
+            let displayedCount = 0;
+            const counterElem = document.getElementById("counter");
+
+            function updateCounter() {
+                const step = Math.ceil((data.value - displayedCount) / 10);
+
+                if (displayedCount + step < data.value) {
+                    displayedCount += step;
+                    counterElem.textContent = numberWithCommas(displayedCount); // Format the number with commas
+                    setTimeout(updateCounter, 2);
+                } else {
+                    // When the final value is reached, ensure it's formatted with commas
+                    counterElem.textContent = numberWithCommas(data.value); // Format the final number with commas
+                }
+            }
+
+            updateCounter();
+        }
+
+        setInterval(function () {
+            const timeSince = getTimeSince();
+            const daysSinceText = `${timeSince.days} days, ${timeSince.hours} hours, ${timeSince.minutes} minutes, ${timeSince.seconds} seconds`;
+            document.getElementById("days-since").textContent = daysSinceText;
+        }, 1000);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
 
     </script>
 

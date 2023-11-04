@@ -10,10 +10,18 @@ services:
       MYSQL_DATABASE: counter_db
     volumes:
       - ./data:/var/lib/mysql
-      
     ports:
       - "3306:3306"
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: Halsnewram
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
   nodejs:
     image: node:latest
     working_dir: /app
@@ -28,14 +36,4 @@ services:
       - MYSQL_DATABASE=counter_db
     depends_on:
       - db
-    command: npx nodemon ./server.js 
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: Halsnewram
-    ports:
-      - "8080:80"
-    depends_on:
-      - db
+    command: npx nodemon ./server.js

@@ -5,6 +5,7 @@ const http = require('http');
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server);
+const socketIo = require('socket.io');
 
 
 
@@ -20,14 +21,7 @@ io.on('connection', (socket) => {
     socket.emit('initialData', { value: counter });
 
 });
-
-// const dbConfig = {
-//     host: 'db',
-//     user: 'tibthink',
-//     password: 'Halsnewram!18',
-//     database: 'counter_db'
-// };
- 
+  
 const dbConfig = {
     host: 'db',
     user: 'root',
@@ -35,8 +29,6 @@ const dbConfig = {
     database: 'counter_db'
 };
 let connection;
-
-
 
 async function initializeDatabase() {
     connection = await mysql.createConnection(dbConfig);
@@ -58,10 +50,6 @@ async function initializeDatabase() {
     }
 }
 
- 
-
-
-
 initializeDatabase();
 
 const path = require('path');
@@ -76,6 +64,7 @@ app.use(express.static('public'));
 app.get('/current-count', async (req, res) => {
     try {
         const [rows] = await connection.query("SELECT value FROM counter WHERE id = 1");
+        
         res.json({ value: rows[0].value });
     } catch (err) {
         console.error(err);
@@ -91,13 +80,14 @@ app.post('/increment', async (req, res) => {
     try {
         await connection.query(`UPDATE counter SET value = value + ${amount} WHERE id = 1`);
         const [rows] = await connection.query("SELECT value FROM counter WHERE id = 1");
-        io.emit('counterUpdated', { value: rows[0].value });
+        io.emit('counterUpdated', { value: rows[0].value }); // emit the updated counter value to all connected clients
         res.json({ value: rows[0].value });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 });
+
 
 
 app.get('/api', async (req, res) => {
@@ -116,6 +106,4 @@ const PORT = 80;
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
-
 console.log('...running!');

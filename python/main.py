@@ -2,6 +2,7 @@ import requests
 import json
 import time
 
+
 # Define ASCII art for each digit and comma
 ascii_art_digits = {
     '0': [" 000 ",
@@ -120,7 +121,7 @@ def format_number_with_commas(number_str):
     return formatted_number
 
 while True:
-    request = requests.get("http://localhost:3001/api")
+    request = requests.get("http://pioxy.net/api")
     output = request.json()
     output_dict = output[0]  # get the first element of the list
     number = output_dict['value']
