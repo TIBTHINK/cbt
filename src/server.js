@@ -5,9 +5,6 @@ const http = require('http');
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server);
-const socketIo = require('socket.io');
-
-
 
 console.log('Cancel Ben Tsardoulias counter is online and...');
 
@@ -43,12 +40,19 @@ async function initializeDatabase() {
             value INT DEFAULT 0 
         );
     `);
+    await connection.query(`
+        CREATE TABLE IF NOT EXISTS logs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            count_added INT DEFAULT 0,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            ip VARCHAR(255)
+        )`);
 
     const [rows] = await connection.query("SELECT * FROM counter");
     if (rows.length === 0) {
         await connection.query("INSERT INTO counter (value) VALUES (0)");
     }
-}
+} 
 
 initializeDatabase();
 
@@ -80,6 +84,7 @@ app.post('/increment', async (req, res) => {
     try {
         await connection.query(`UPDATE counter SET value = value + ${amount} WHERE id = 1`);
         const [rows] = await connection.query("SELECT value FROM counter WHERE id = 1");
+        await connection.query(`INSERT INTO logs (count_added, ip) VALUES (${amount}, '${req.ip}')`);
         io.emit('counterUpdated', { value: rows[0].value }); // emit the updated counter value to all connected clients
         res.json({ value: rows[0].value });
     } catch (err) {
