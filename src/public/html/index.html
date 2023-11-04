@@ -49,6 +49,10 @@
     </div>
 
     <script>
+
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
         // JavaScript code
         function getTimeSince() {
             const startDate = new Date("October 30, 2023 00:50:00");
@@ -68,7 +72,7 @@
 
         function updateProgressBar(data) {
             const progressBar = document.getElementById('progress-bar');
-        const percentageSpan = document.getElementById('progress-percentage');
+            const percentageSpan = document.getElementById('progress-percentage');
             const startValue = progressBar.value;
             const endValue = data.value;
             const duration = 1000; // duration of the animation in milliseconds
@@ -86,7 +90,8 @@
                 if (progress < 1) {
                     requestAnimationFrame(animate);
                 } else {
-                    document.getElementById('counter').textContent = endValue;
+                    // When animation is complete, format the final value with commas
+                    document.getElementById('counter').textContent = numberWithCommas(endValue);
                 }
             }
 
@@ -95,73 +100,75 @@
 
         async function fetchCurrentCount() {
             try {
-            const response = await fetch('/current-count');
-            const data = await response.json();
-            updateProgressBar(data);
-            
+                const response = await fetch('/current-count');
+                const data = await response.json();
+                updateProgressBar(data);
 
-        let displayedCount = 0;
-        const counterElem = document.getElementById('counter');
 
-        function updateCounter() {
-            // Calculate the remaining difference
-            const difference = data.value - displayedCount;
-            // Adjust the speed based on the remaining difference. The larger the difference, the bigger the step.
-            const step = Math.max(1, Math.ceil(difference * 0.05)); // 5% of the remaining difference
+                let displayedCount = 0;
+                const counterElem = document.getElementById('counter');
 
-            if (displayedCount + step < data.value) {
-                displayedCount += step;
-                counterElem.textContent = displayedCount;
-                // Use setTimeout instead of setInterval for dynamic intervals
-                setTimeout(updateCounter, 2);
-            } else {
-                counterElem.textContent = data.value; // directly set the final value
+                function updateCounter() {
+                    // Calculate the remaining difference
+                    const difference = data.value - displayedCount;
+                    // Adjust the speed based on the remaining difference. The larger the difference, the bigger the step.
+                    const step = Math.max(1, Math.ceil(difference * 0.05)); // 5% of the remaining difference
+
+                    if (displayedCount + step < data.value) {
+                        displayedCount += step;
+                        counterElem.textContent = numberWithCommas(displayedCount);
+                        // Use setTimeout instead of setInterval for dynamic intervals
+                        setTimeout(updateCounter, 2);
+                    } else {
+                        counterElem.textContent = data.value; // directly set the final value
+                    }
+                }
+
+                updateCounter();
+                counterElem.textContent = numberWithCommas(data.value);
+
+            } catch (error) {
+                console.error(error);
             }
-        }
-
-        updateCounter();
-
-    } catch (error) {
-        console.error(error);
-    }
         }
 
         async function incrementCounter(amount = 1) {
             const counterElem = document.getElementById('counter');
-    const currentCount = parseInt(counterElem.textContent, 10);
+            const currentCount = parseInt(counterElem.textContent, 10);
 
-    try {
-        const response = await fetch('/increment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ amount: amount })
-        });
+            try {
+                const response = await fetch('/increment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount: amount })
+                });
 
-        const data = await response.json();
+                const data = await response.json();
 
-        let displayedCount = currentCount;
+                let displayedCount = currentCount;
 
-        function updateCounter() {
-            // Same logic as above
-            const difference = data.value - displayedCount;
-            const step = Math.max(1, Math.ceil(difference * 0.05));
+                function updateCounter() {
+                    // Same logic as above
+                    const difference = data.value - displayedCount;
+                    const step = Math.max(1, Math.ceil(difference * 0.05));
 
-            if (displayedCount + step < data.value) {
-                displayedCount += step;
-                counterElem.textContent = displayedCount;
-                setTimeout(updateCounter, 2);
-            } else {
-                counterElem.textContent = data.value;
+                    if (displayedCount + step < data.value) {
+                        displayedCount += step;
+                        counterElem.textContent = numberWithCommas(displayedCount); // Format the number with commas
+                        setTimeout(updateCounter, 2);
+                    } else {
+                        // When the final value is reached, ensure it's formatted with commas
+                        counterElem.textContent = numberWithCommas(data.value); // Format the final number with commas
+                    }
+                }
+
+                updateCounter();
+
+            } catch (error) {
+                console.error('Failed to update count:', error);
             }
-        }
-
-        updateCounter();
-
-    } catch (error) {
-        console.error('Failed to update count:', error);
-    }
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -169,6 +176,7 @@
             setInterval(function () {
                 const timeSince = getTimeSince();
                 const daysSince = `${timeSince.days} days, ${timeSince.hours} hours, ${timeSince.minutes} minutes, ${timeSince.seconds} seconds`;
+                document.getElementById("counter").textContent = numberWithCommas(data.value);
                 document.getElementById("days-since").textContent = daysSince;
             }, 1000);
         });
