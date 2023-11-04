@@ -171,15 +171,17 @@
             }
         }
 
+        // This should be inside an async function or then block where `data` is available
         document.addEventListener("DOMContentLoaded", function () {
-            // Only DOMContentLoaded-specific code here
+            // This interval is only responsible for updating the "days since" text
             setInterval(function () {
                 const timeSince = getTimeSince();
-                const daysSince = `${timeSince.days} days, ${timeSince.hours} hours, ${timeSince.minutes} minutes, ${timeSince.seconds} seconds`;
+                const daysSinceText = `${timeSince.days} days, ${timeSince.hours} hours, ${timeSince.minutes} minutes, ${timeSince.seconds} seconds`;
+                document.getElementById("days-since").textContent = daysSinceText;
                 document.getElementById("counter").textContent = numberWithCommas(data.value);
-                document.getElementById("days-since").textContent = daysSince;
             }, 1000);
         });
+
     </script>
 
 </body>

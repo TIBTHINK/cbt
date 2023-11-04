@@ -101,14 +101,15 @@ app.post('/increment', async (req, res) => {
 
 
 app.get('/api', async (req, res) => {
-    try {
-      // Assuming `connection` is a promise-based connection from mysql2
-      const [rows, fields] = await connection.query('SELECT value FROM counter');
-      res.json(rows);
-    } catch (error) {
-      res.status(500).send('Internal Server Error');
-    }
-  });
+        try {
+            // Assuming `connection` is a promise-based connection from mysql2
+            const [rows, fields] = await connection.query('SELECT value FROM counter');
+            res.json(rows);
+            console.log("api called from IP address: " + req.ip);
+        } catch (error) {
+            res.status(500).send('Internal Server Error');
+        }
+    });
   
 
 const PORT = 80;

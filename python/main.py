@@ -94,20 +94,22 @@ ascii_art_digits = {
           " 0  "]
 }
 
+
+
 # Function to convert a number (or string) to ASCII art
 def number_to_ascii_art(number):
-    # Convert the number to a string if it's not already
-    number_str = str(number)
-    # Create a list for each row of the ASCII art
-    ascii_art_lines = ['' for _ in range(8)]
-    # Append each digit's ASCII art to the lines
-    for digit in number_str:
-        if digit in ascii_art_digits:
-            for i, line in enumerate(ascii_art_digits[digit]):
-                ascii_art_lines[i] += line + '  '
-        else:
-            raise ValueError(f"No ASCII art for digit or symbol: {digit}")
-    return '\n'.join(ascii_art_lines)
+      # Convert the number to a string if it's not already
+      number_str = str(number)
+      # Create a list for each row of the ASCII art
+      ascii_art_lines = ['' for _ in range(8)]
+      # Append each digit's ASCII art to the lines
+      for digit in number_str:
+            if digit in ascii_art_digits:
+                  for i, line in enumerate(ascii_art_digits[digit]):
+                        ascii_art_lines[i] += line + '  '
+            else:
+                  raise ValueError(f"No ASCII art for digit or symbol: {digit}")
+      return '\n'.join(ascii_art_lines)
 
 def format_number_with_commas(number_str):
     formatted_number = ""
@@ -126,4 +128,4 @@ while True:
     # Convert number to string
     number_str = str(number)
     print(number_to_ascii_art(format_number_with_commas(number_str)))
-    time.sleep(1)
+    time.sleep(.5)
