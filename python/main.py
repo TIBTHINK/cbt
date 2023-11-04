@@ -106,7 +106,7 @@ def number_to_ascii_art(number):
       for digit in number_str:
             if digit in ascii_art_digits:
                   for i, line in enumerate(ascii_art_digits[digit]):
-                        ascii_art_lines[i] += line + '  '
+                        ascii_art_lines[i] += line + ' '
             else:
                   raise ValueError(f"No ASCII art for digit or symbol: {digit}")
       return '\n'.join(ascii_art_lines)

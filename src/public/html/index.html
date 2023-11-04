@@ -45,7 +45,7 @@
     </div>
 
     <div class="day-counter">
-        It has been <span id="days-since"></span> since this started
+        It has been <span id="days-since">Loading...</span> since this started
     </div>
 
     <script>
@@ -55,7 +55,7 @@
         }
         // JavaScript code
         function getTimeSince() {
-            const startDate = new Date("October 30, 2023 00:50:00");
+            const startDate = new Date("October 29, 2023 23:25:00");
             const currentDate = new Date();
             const timeDiff = Math.abs(currentDate.getTime() - startDate.getTime());
             const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
