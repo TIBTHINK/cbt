@@ -25,6 +25,9 @@ button {
     background-color: #098BDB;
     color: white;
     cursor: pointer;
+    /*  */
+    
+
 }
 
 button:hover {
@@ -32,12 +35,13 @@ button:hover {
 }
 
 .buttons-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 400px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    
 }
+
 
 .progress-container {
     width: 100%;

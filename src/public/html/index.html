@@ -41,6 +41,11 @@
             <button onclick="incrementCounter(5)">Cancel me x5</button>
             <button onclick="incrementCounter(10)">Cancel me x10</button>
             <button onclick="incrementCounter(25)">Cancel me x25</button>
+        
+            <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(100, password='fuck')">Cancel me x100 ☠️ </button>
+            <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(250, password='cunt')">Cancel me x250 ☠️ </button>
+            <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(500, password='faggot')">Cancel me x500 ☠️ </button>
+            <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(1000, password='i really fucked up didnt i')">Cancel me x1000 ☠️ </button>
         </div>
     </div>
 
@@ -139,80 +144,96 @@
             }
         }
 
-        async function incrementCounter(amount = 1) {
-            const counterElem = document.getElementById('counter');
-            const currentCount = parseInt(counterElem.textContent, 10);
 
-            try {
-                const response = await fetch('/increment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ amount: amount })
-                });
+        async function incrementCounter(amount = 1, password = null) {
+    const counterElem = document.getElementById('counter');
+    const currentCount = parseInt(counterElem.textContent, 10);
 
-                const data = await response.json();
-
-                let displayedCount = currentCount;
-
-                function updateCounter() {
-                    // Same logic as above
-                    const difference = data.value - displayedCount;
-                    const step = Math.max(1, Math.ceil(difference * 0.05));
-
-                    if (displayedCount + step < data.value) {
-                        displayedCount += step;
-                        counterElem.textContent = numberWithCommas(displayedCount); // Format the number with commas
-                        setTimeout(updateCounter, 2);
-                    } else {
-                        // When the final value is reached, ensure it's formatted with commas
-                        counterElem.textContent = numberWithCommas(data.value); // Format the final number with commas
-                    }
-                }
-
-                updateCounter();
-
-            } catch (error) {
-                console.error('Failed to update count:', error);
+    try {
+        if (password) {
+            const input = prompt('Please enter the passcode:');
+            if (input !== password) {
+                throw new Error('Incorrect password');
             }
         }
+
+        const response = await fetch('/increment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ amount: amount })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok.');
+        }
+
+        const data = await response.json();
+
+        let displayedCount = currentCount;
+
+        function numberWithCommas(number) {
+            // Assuming this function exists to format numbers with commas
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function updateCounter() {
+            const difference = data.value - displayedCount;
+            const step = Math.max(1, Math.ceil(difference * 0.05));
+
+            if (displayedCount + step < data.value) {
+                displayedCount += step;
+                counterElem.textContent = numberWithCommas(displayedCount);
+                setTimeout(updateCounter, 2);
+            } else {
+                counterElem.textContent = numberWithCommas(data.value);
+            }
+        }
+
+        updateCounter();
+
+    } catch (error) {
+        console.error('Failed to update count:', error);
+    }
+}
+
 
         // This should be inside an async function or then block where `data` is available
         document.addEventListener("DOMContentLoaded", async function () {
-    try {
-        const response = await fetch('/api');
-        const data = await response.json();
+            try {
+                const response = await fetch('/api');
+                const data = await response.json();
 
-        if (data.value !== undefined) {
-            let displayedCount = 0;
-            const counterElem = document.getElementById("counter");
+                if (data.value !== undefined) {
+                    let displayedCount = 0;
+                    const counterElem = document.getElementById("counter");
 
-            function updateCounter() {
-                const step = Math.ceil((data.value - displayedCount) / 10);
+                    function updateCounter() {
+                        const step = Math.ceil((data.value - displayedCount) / 10);
 
-                if (displayedCount + step < data.value) {
-                    displayedCount += step;
-                    counterElem.textContent = numberWithCommas(displayedCount); // Format the number with commas
-                    setTimeout(updateCounter, 2);
-                } else {
-                    // When the final value is reached, ensure it's formatted with commas
-                    counterElem.textContent = numberWithCommas(data.value); // Format the final number with commas
+                        if (displayedCount + step < data.value) {
+                            displayedCount += step;
+                            counterElem.textContent = numberWithCommas(displayedCount); // Format the number with commas
+                            setTimeout(updateCounter, 2);
+                        } else {
+                            // When the final value is reached, ensure it's formatted with commas
+                            counterElem.textContent = numberWithCommas(data.value); // Format the final number with commas
+                        }
+                    }
+
+                    updateCounter();
                 }
+
+                setInterval(function () {
+                    const timeSince = getTimeSince();
+                    const daysSinceText = `${timeSince.days} days, ${timeSince.hours} hours, ${timeSince.minutes} minutes, ${timeSince.seconds} seconds`;
+                    document.getElementById("days-since").textContent = daysSinceText;
+                }, 1000);
+            } catch (error) {
+                console.error('Error:', error);
             }
-
-            updateCounter();
-        }
-
-        setInterval(function () {
-            const timeSince = getTimeSince();
-            const daysSinceText = `${timeSince.days} days, ${timeSince.hours} hours, ${timeSince.minutes} minutes, ${timeSince.seconds} seconds`;
-            document.getElementById("days-since").textContent = daysSinceText;
-        }, 1000);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-});
+        });
 
     </script>
 
