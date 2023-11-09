@@ -11,6 +11,7 @@ console.log('Cancel Ben Tsardoulias counter is online and...');
 // For parsing application/json
 app.use(bodyParser.json());
 
+
 let counter = 0; // replace this with your actual initial value
 
 io.on('connection', (socket) => {
@@ -18,11 +19,11 @@ io.on('connection', (socket) => {
     socket.emit('initialData', { value: counter });
 
 });
-  
+
 const dbConfig = {
     host: 'db',
     user: 'root',
-    password: 'Halsnewram',
+    password: 'rassword',
     database: 'counter_db'
 };
 let connection;
@@ -34,6 +35,7 @@ async function initializeDatabase() {
         console.error(err);
         setTimeout(initializeDatabase, 2000);
     });
+    
     await connection.query(`
         CREATE TABLE IF NOT EXISTS counter (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -64,6 +66,7 @@ app.get('/', (req, res) => {
     
         
 app.use(express.static('public'));
+
 
 app.get('/current-count', async (req, res) => {
     try {
@@ -109,6 +112,7 @@ app.get('/api', async (req, res) => {
 
 const PORT = 80;
 server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    const address = server.address();
+    console.log(`Server is running on port ${address.port} `);
 });
 console.log('...running!');

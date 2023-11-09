@@ -4,12 +4,13 @@ services:
   db:
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: Halsnewram
-      MYSQL_USER: tibthink
-      MYSQL_PASSWORD: Halsnewram!18
+      MYSQL_ROOT_PASSWORD: rassword
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
       MYSQL_DATABASE: counter_db
     volumes:
       - ./data:/var/lib/mysql
+      
     ports:
       - "3306:3306"
 

@@ -9,6 +9,7 @@ show_help() {
   echo "  -s    Stop the containers."
   echo "  -r    Restart the containers."
   echo "  -t    Start a terminal for Node.js."
+  echo "  -R    remove all containers"
   echo "  -l    View logs for Node.js container."
   echo "  -h    Show this help menu."
   echo "If no option is provided, this help menu will be displayed."
@@ -24,6 +25,26 @@ start_containers() {
 start_containers_detached() {
   echo "Starting containers detached..."
   docker-compose up -d
+  
+    # browser=""
+    # if command -v google-chrome &> /dev/null
+    # then
+    #   browser="google-chrome"
+    # elif command -v firefox &> /dev/null
+    # then
+    #   browser="firefox"
+    # elif command -v brave-browser &> /dev/null
+    # then
+    #   browser="brave-browser"
+    # else
+    #   echo "No supported browser found"
+    #   exit 1
+    # fi
+
+    # # open the browser as the current user
+    # su -c "$browser http://localhost:3000" $USER 
+
+    
 }
 
 # Function to stop containers
@@ -36,6 +57,13 @@ stop_containers() {
 restart_containers() {
   echo "Restarting containers..."
   docker-compose restart
+}
+
+# Function to remove all containers
+remove_containers() {
+  echo "Removing containers..."
+  docker-compose rm
+  rm -rf data/
 }
 
 # Function to start a terminal for Node.js
@@ -87,7 +115,7 @@ if [ $# -eq 0 ]; then
 fi
 
 # Process command-line options
-while getopts "uUsrthl" opt; do
+while getopts "uUsrtRhl" opt; do
   case $opt in
     u)
       start_containers
@@ -103,6 +131,9 @@ while getopts "uUsrthl" opt; do
       ;;
     t)
       start_nodejs_terminal
+      ;;
+    R)
+      remove_containers
       ;;
     l)
       view_nodejs_logs
