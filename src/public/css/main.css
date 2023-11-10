@@ -1,3 +1,21 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 110vh;
+    flex-direction: column;
+}
+
+.container,
+.day-counter {
+    width: 90%;
+    /* Or any other width */
+    margin: auto;
+    text-align: center;
+    /* Centers text within the containers */
+}
+
+
 .container {
     display: flex;
     flex-direction: column;
@@ -96,7 +114,8 @@ progress::-webkit-progress-value {
     }
 
     .title {
-        font-size: medium;
+        font-size: .8em;
+        margin-bottom: 0px;
     }
 
     .counter {

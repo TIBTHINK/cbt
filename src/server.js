@@ -47,7 +47,8 @@ async function initializeDatabase() {
             id INT AUTO_INCREMENT PRIMARY KEY,
             count_added INT DEFAULT 0,
             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            ip VARCHAR(255)
+            ip VARCHAR(255),
+            reason VARCHAR(255)
         )`);
 
     const [rows] = await connection.query("SELECT * FROM counter");
@@ -84,10 +85,11 @@ app.get('/current-count', async (req, res) => {
 
 app.post('/increment', async (req, res) => {
     const amount = req.body.amount || 1; // default to 1 if amount is not provided
+    const reason = req.body.reason || "No reason provided"; // default to 1 if amount is not provided
     try {
         await connection.query(`UPDATE counter SET value = value + ${amount} WHERE id = 1`);
         const [rows] = await connection.query("SELECT value FROM counter WHERE id = 1");
-        await connection.query(`INSERT INTO logs (count_added, ip) VALUES (${amount}, '${req.ip}')`);
+        await connection.query(`INSERT INTO logs (count_added, ip, reason) VALUES (${amount}, '${req.ip}', '${reason}')`);
         io.emit('counterUpdated', { value: rows[0].value }); // emit the updated counter value to all connected clients
         res.json({ value: rows[0].value });
     } catch (err) {

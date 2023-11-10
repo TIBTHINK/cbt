@@ -16,25 +16,6 @@
     <meta name="language" content="English">
     <!-- add icon -->
     <link rel="icon" href="/img/cancelbentsardoulias.jpg" type="image/x-icon">
-    <style>
-        /* Add CSS to center the content on the page */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-
-        .container,
-        .day-counter {
-            width: 90%;
-            /* Or any other width */
-            margin: auto;
-            text-align: center;
-            /* Centers text within the containers */
-        }
-    </style>
 </head>
 <body onload="fetchCurrentCount(); updateProgressBar({value: 0})">
     <div class="container">
@@ -47,47 +28,18 @@
             <span id="progress-percentage" class="progress-percentage"></span>
         </div>
         <div class="buttons-container">
-            <script>
-                // Define the variable in the global scope
-                var password1, password2, password3, password4;
-
-                // Make a request to the JSON file
-                fetch('config.json')
-                    .then(response => response.json()) // Parse the response as JSON
-                    .then(data => {
-                        // Assign the variables
-                        password1 = data.OneHundred;
-                        password2 = data.TwohundredFifty;
-                        password3 = data.FiveHundred;
-                        password4 = data.OneThousand;
-                    })
-                    .catch(error => console.error(error)); // Handle any errors
-            </script>
-                
-
-            </script>
             <button onclick="incrementCounter(1)">Cancel me</button>
             <button onclick="incrementCounter(5)">Cancel me x5</button>
             <button onclick="incrementCounter(10)">Cancel me x10</button>
             <button onclick="incrementCounter(25)">Cancel me x25</button>
-        
             <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(100, password1)">Cancel me x100 ☠️ </button>
             <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(250, password2)">Cancel me x250 ☠️ </button>
             <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(500, password3)">Cancel me x500 ☠️ </button>
-            <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(1000, password4)">Cancel me x1000 ☠️ </button>
+            <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(1000, password4)">Cancel me x1,000 ☠️ </button>
         </div>
     </div>
-
     <div class="day-counter">
         It has been <span id="days-since">Loading...</span> since this started
     </div>
-
-    <script>
-
-
-
-    </script>
-
 </body>
-
 </html>

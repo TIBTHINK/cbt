@@ -10,6 +10,22 @@ function numberWithCommas(x) {
 }
 // JavaScript code
 
+// Define the variable in the global scope
+var title, password1, password2, password3, password4;
+
+// Make a request to the JSON file
+fetch('config.json')
+    .then(response => response.json()) // Parse the response as JSON
+    .then(data => {
+        title = data.config.title;
+        // passwords
+        password1 = data.password.OneHundred;
+        password2 = data.password.TwohundredFifty;
+        password3 = data.password.FiveHundred;
+        password4 = data.password.OneThousand;
+    })
+    .catch(error => console.error(error)); // Handle any errors
+
 function getTimeSince() {
   const startDate = new Date("October 29, 2023 23:25:00");
   const currentDate = new Date();
@@ -87,7 +103,7 @@ async function fetchCurrentCount() {
   }
 }
 
-async function incrementCounter(amount = 1, password = null) {
+async function incrementCounter(amount = 1, password = null, reason=true) {
   const counterElem = document.getElementById("counter");
   const currentCount = parseInt(counterElem.textContent, 10);
   try {
@@ -97,13 +113,20 @@ async function incrementCounter(amount = 1, password = null) {
         throw new Error("Incorrect password");
       }
     }
+    if (reason) {
+      const input = prompt("Please enter a reason for the cancel:");
+      if (input === null) {
+        throw new Error("No reason provided");
+      }
+      reasonRespones = input;
+    }
 
     const response = await fetch("/increment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ amount: amount }),
+      body: JSON.stringify({ amount: amount, reason: reasonRespones }),
     });
 
     if (!response.ok) {
