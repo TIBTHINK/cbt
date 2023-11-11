@@ -96,6 +96,16 @@ ascii_art_digits = {
 }
 
 
+def print_ascii_art(ascii_art):
+    for line in ascii_art.split('\n'):
+        print(line + '\r')
+
+def overwrite_ascii_art(num_lines):
+    # Move up one line and clear to the end
+    for _ in range(num_lines):
+        print('\033[A\033[K', end='')
+
+
 
 # Function to convert a number (or string) to ASCII art
 def number_to_ascii_art(number):
@@ -121,12 +131,28 @@ def format_number_with_commas(number_str):
     return formatted_number
 
 while True:
-    request = requests.get("http://pioxy.net/api")
-    output = request.json()
-    output_dict = output[0]  # get the first element of the list
-    number = output_dict['value']
+    try:
+        response = requests.get("http://localhost:3001/api")
+        if response.status_code == 200:
+            data = response.json()
+            count_value = data["count"][0]["value"]
 
-    # Convert number to string
-    number_str = str(number)
-    print(number_to_ascii_art(format_number_with_commas(number_str)))
-    time.sleep(.5)
+            # Format ASCII art
+            formatted_count_value = format_number_with_commas(str(count_value))
+            ascii_art = number_to_ascii_art(formatted_count_value)
+            num_lines = ascii_art.count('\n') + 1
+
+            # Overwrite the previous ASCII art
+            overwrite_ascii_art(num_lines)
+
+            # Print the new ASCII art
+            print_ascii_art(ascii_art)
+
+        else:
+            print(f"Failed to get data: Status Code {response.status_code}")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    # Delay the next request (adjust as needed)
+    time.sleep(1)
