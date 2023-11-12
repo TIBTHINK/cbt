@@ -1,6 +1,7 @@
 {
   "config": {
-    "name": "ben tsardoulias"
+    "title": "CANCEL BEN TSARDOULIAS",
+    "start_date": "2023-10-29"
   },
   
   "password": {
@@ -9,5 +10,6 @@
     "FiveHundred": "you got to be kidding",
     "OneThousand": "wow i must of really fucked up"
   }
+  
 
 }

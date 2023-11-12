@@ -5,9 +5,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="/css/main.css">
     <script src="/js/script.js"></script>
-    <title>Cancel Ben Tsardoulias</title>
+    <title id="browser_title"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta name="description" content="Cancel Ben Tsardoulias">
     <meta name="keywords" content="Cancel Ben Tsardoulias">
     <meta name="author" content="Ben Tsardoulias">
@@ -19,8 +18,10 @@
 </head>
 <body onload="fetchCurrentCount(); updateProgressBar({value: 0})">
     <div class="container">
+        <button class="dark_mode_button" onclick="toggleDarkMode()">Dark Mode</button>
+
         <div class="title">
-            <h1>CANCEL BEN TSARDOULIAS</h1>
+            <h1 id="title"></h1>
         </div>
         <div class="counter">I have been canceled <span id="counter">0</span> times</div>
         <div class="progress-container">
@@ -37,9 +38,10 @@
             <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(500, password3)">Cancel me x500 ☠️ </button>
             <button style="background-color: rgb(163, 0, 0);" onclick="incrementCounter(1000, password4)">Cancel me x1,000 ☠️ </button>
         </div>
+        <div class="day-counter">
+            It has been <span id="days-since">Loading...</span> since this started
+        </div>
     </div>
-    <div class="day-counter">
-        It has been <span id="days-since">Loading...</span> since this started
-    </div>
+    
 </body>
 </html>

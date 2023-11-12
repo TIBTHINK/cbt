@@ -103,45 +103,74 @@ progress::-webkit-progress-value {
     margin-bottom: 30px;
     font-weight: bold;
     font-family: ubuntu;
-    color: black;
+    
 
 }
 
+.dark_mode_button{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ffffff;
+    color: black;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1.5em;
+    margin-bottom: 30px;
+    font-weight: bold;
+    font-family: ubuntu;
+}
+.dark-mode {
+    background-color: #121212;
+    color: white;
+
+}
+
+
+
+
 /* add mobile css */
 @media only screen and (max-width: 600px) {
-    .container {
-        flex-direction: column;
+    body{
+        height: 120vh;
     }
-
-    .title {
-        font-size: .8em;
-        margin-bottom: 0px;
-    }
-
-    .counter {
-        font-size: 1.2em;
-    }
-
-    button {
-        font-size: 1.2em;
-        padding: 8px 16px;
+    .container,
+    .day-counter {
+        width: 100%;
+        /* Or any other width */
+        margin: auto;
+        text-align: center;
+        /* Centers text within the containers */
     }
 
     .buttons-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, 1fr);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 30px;
     }
 
-    .progress-container {
-        max-width: 300px;
+    .dark_mode_button{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #ffffff;
+        color: black;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-size: .5em;
+        margin-bottom: 30px;
+        font-weight: bold;
+        font-family: ubuntu;
     }
-
-    progress {
-        height: 20px;
-    }
-
-    .day-counter {
-        padding-top: 40px;
-        font-size: 1.2em;
+    .dark-mode {
+        background-color: #121212;
+        color: white;
+    
     }
 }

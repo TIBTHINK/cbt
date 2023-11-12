@@ -18,16 +18,21 @@ fetch('config.json')
     .then(response => response.json()) // Parse the response as JSON
     .then(data => {
         title = data.config.title;
+        console.log(title);
+        document.getElementById("title").textContent = title;
+        document.getElementById("browser_title").textContent = title;
         // passwords
         password1 = data.password.OneHundred;
         password2 = data.password.TwohundredFifty;
         password3 = data.password.FiveHundred;
         password4 = data.password.OneThousand;
+        // start date
+        start_date = data.config.start_date;
     })
     .catch(error => console.error(error)); // Handle any errors
 
-function getTimeSince() {
-  const startDate = new Date("October 29, 2023 23:25:00");
+function getTimeSince(start_date) {
+  const startDate = new Date(start_date);
   const currentDate = new Date();
   const timeDiff = Math.abs(currentDate.getTime() - startDate.getTime());
   const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
@@ -161,6 +166,25 @@ async function incrementCounter(amount = 1, password = null, reason=true) {
   }
 }
 
+function toggleDarkMode() {
+  const body = document.body;
+  body.classList.toggle("dark-mode");
+
+  // Save the user's preference in localStorage
+  if (body.classList.contains("dark-mode")) {
+      localStorage.setItem("darkMode", "enabled");
+  } else {
+      localStorage.setItem("darkMode", "disabled");
+  }
+}
+
+// Check for saved user preference, if any, when the page loads
+document.addEventListener("DOMContentLoaded", (event) => {
+  if (localStorage.getItem("darkMode") === "enabled") {
+      document.body.classList.add("dark-mode");
+  }
+});
+
 // This should be inside an async function or then block where `data` is available
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -188,7 +212,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     setInterval(function () {
-      const timeSince = getTimeSince();
+      const timeSince = getTimeSince(start_date);
       const daysSinceText = `${timeSince.days} days, ${timeSince.hours} hours, ${timeSince.minutes} minutes, ${timeSince.seconds} seconds`;
       document.getElementById("days-since").textContent = daysSinceText;
     }, 1000);
