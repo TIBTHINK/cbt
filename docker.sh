@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# check if docker, docker-compose are installed
+if ! command -v docker &> /dev/null
+then
+    echo "docker could not be found"
+    exit
+fi
+
+if ! command -v docker-compose &> /dev/null
+then
+    echo "docker-compose could not be found"
+    exit
+fi
+
+
 # Function to show help menu
 show_help() {
   echo "Usage: $0 [option]"
@@ -94,11 +108,6 @@ start_nodejs_terminal() {
 # Function to view logs for Node.js
 view_nodejs_logs() {
   echo "Viewing logs for Node.js container..."
-
-
-
-#   SERVICE_NAME="cbt_nodejs_1"  # Replace with your actual service name
-
   docker logs -f cbt_nodejs_1
 }
 

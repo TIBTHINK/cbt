@@ -100,21 +100,6 @@ app.post('/increment', async (req, res) => {
 
 
 
-// app.get('/api', async (req, res) => {
-//         try {
-//             // Assuming `connection` is a promise-based connection from mysql2
-//             const [count, fields] = await connection.query('SELECT value FROM counter');
-//             // select reason from logs from last input
-//             const [reason] = await connection.query('SELECT reason FROM logs ORDER BY id DESC LIMIT 1');
-//             res.json({ count: count,reason: reason });
-//             console.log("api called from IP address: " + req.ip);
-//         } catch (error) {
-//             res.status(500).send('Internal Server Error');
-//         }
-//     });
-  
-
-// make a api that takes the current count from counter table, and the reason from logs table
 app.get('/api', async (req, res) => {
     try {
         // Assuming `connection` is a promise-based connection from mysql2

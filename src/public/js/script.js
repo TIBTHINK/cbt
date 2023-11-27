@@ -119,7 +119,7 @@ async function incrementCounter(amount = 1, password = null, reason=true) {
       }
     }
     if (reason) {
-      const input = prompt("Please enter a reason for the cancel:");
+      const input = prompt("Oh golly gee what did i say:");
       if (input === null) {
         throw new Error("No reason provided");
       }

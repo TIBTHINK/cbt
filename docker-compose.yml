@@ -20,16 +20,16 @@ services:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: Halsnewram
     ports:
-      - "8080:80"
+      - "8080:2002"
     depends_on:
       - db
   nodejs:
     image: node:latest
     working_dir: /app
-    volumes:
+    volumes:  
       - ./src:/app
     ports:
-      - "3001:80"
+      - "80:80"
     environment:
       - MYSQL_HOST=db
       - MYSQL_USER=tibthink
