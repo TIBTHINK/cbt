@@ -1,21 +1,17 @@
 const socket = io.connect("http://localhost:3001");
 
 socket.on("counterUpdated", function (data) {
-  // Update the counter here
   document.getElementById("counter").textContent = numberWithCommas(data.value);
 });
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
-// JavaScript code
 
-// Define the variable in the global scope
 var title, password1, password2, password3, password4;
 
-// Make a request to the JSON file
 fetch('config.json')
-    .then(response => response.json()) // Parse the response as JSON
+    .then(response => response.json())
     .then(data => {
         title = data.config.title;
         console.log(title);
@@ -26,10 +22,9 @@ fetch('config.json')
         password2 = data.password.TwohundredFifty;
         password3 = data.password.FiveHundred;
         password4 = data.password.OneThousand;
-        // start date
         start_date = data.config.start_date;
     })
-    .catch(error => console.error(error)); // Handle any errors
+    .catch(error => console.error(error));
 
 function getTimeSince(start_date) {
   const startDate = new Date(start_date);
@@ -52,7 +47,7 @@ function updateProgressBar(data) {
   const percentageSpan = document.getElementById("progress-percentage");
   const startValue = progressBar.value;
   const endValue = data.value;
-  const duration = 1000; // duration of the animation in milliseconds
+  const duration = 1000; 
   const startTime = performance.now();
 
   function animate(currentTime) {
@@ -67,7 +62,6 @@ function updateProgressBar(data) {
     if (progress < 1) {
       requestAnimationFrame(animate);
     } else {
-      // When animation is complete, format the final value with commas
       document.getElementById("counter").textContent =
         numberWithCommas(endValue);
     }
@@ -86,18 +80,14 @@ async function fetchCurrentCount() {
     const counterElem = document.getElementById("counter");
 
     function updateCounter() {
-      // Calculate the remaining difference
       const difference = data.value - displayedCount;
-      // Adjust the speed based on the remaining difference. The larger the difference, the bigger the step.
-      const step = Math.max(1, Math.ceil(difference * 0.05)); // 5% of the remaining difference
-
+      const step = Math.max(1, Math.ceil(difference * 0.05));
       if (displayedCount + step < data.value) {
         displayedCount += step;
         counterElem.textContent = numberWithCommas(displayedCount);
-        // Use setTimeout instead of setInterval for dynamic intervals
         setTimeout(updateCounter, 2);
       } else {
-        counterElem.textContent = data.value; // directly set the final value
+        counterElem.textContent = data.value; 
       }
     }
 
@@ -178,14 +168,12 @@ function toggleDarkMode() {
   }
 }
 
-// Check for saved user preference, if any, when the page loads
 document.addEventListener("DOMContentLoaded", (event) => {
   if (localStorage.getItem("darkMode") === "enabled") {
       document.body.classList.add("dark-mode");
   }
 });
 
-// This should be inside an async function or then block where `data` is available
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const response = await fetch("/api");
@@ -200,11 +188,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (displayedCount + step < data.value) {
           displayedCount += step;
-          counterElem.textContent = numberWithCommas(displayedCount); // Format the number with commas
+          counterElem.textContent = numberWithCommas(displayedCount);
           setTimeout(updateCounter, 2);
         } else {
-          // When the final value is reached, ensure it's formatted with commas
-          counterElem.textContent = numberWithCommas(data.value); // Format the final number with commas
+          counterElem.textContent = numberWithCommas(data.value); 
         }
       }
 

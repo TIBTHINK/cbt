@@ -9,10 +9,8 @@ body {
 .container,
 .day-counter {
     width: 90%;
-    /* Or any other width */
     margin: auto;
     text-align: center;
-    /* Centers text within the containers */
 }
 
 
@@ -43,9 +41,6 @@ button {
     background-color: #098BDB;
     color: white;
     cursor: pointer;
-    /*  */
-    
-
 }
 
 button:hover {
@@ -59,7 +54,6 @@ button:hover {
     gap: 10px;
     
 }
-
 
 .progress-container {
     width: 100%;
@@ -98,7 +92,6 @@ progress::-webkit-progress-value {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
     font-size: 1.5em;
     margin-bottom: 30px;
     font-weight: bold;
@@ -128,10 +121,6 @@ progress::-webkit-progress-value {
 
 }
 
-
-
-
-/* add mobile css */
 @media only screen and (max-width: 600px) {
     body{
         height: 120vh;
@@ -139,10 +128,8 @@ progress::-webkit-progress-value {
     .container,
     .day-counter {
         width: 100%;
-        /* Or any other width */
         margin: auto;
         text-align: center;
-        /* Centers text within the containers */
     }
 
     .buttons-container {
