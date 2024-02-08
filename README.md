@@ -1,12 +1,12 @@
-# CBT
-Version: 1.1.0
+# Counting Ur Mistakes
+Version: 1.2.0
 
 ## Prerequisites
 to use you need to have sudo privileges and docker and docker-compose installed
 ```sh
-sudo apt install docker docker-compose
+sudo apt install docker docker-compose git
 ```
-
+Make sure to clone the repo and node just the docker-compose file
 
 ## How to use
 Option 1
@@ -52,7 +52,8 @@ Follow [this](https://learn.adafruit.com/adafruit-matrixportal-s3/install-circui
 
 ## Programing the board
 
-clone the [git repo](https://github.com/TIBTHINK/cbt_board) and copy the contents into the circutpython folder on your desktop
+clone the [git repo](https://github.com/TIBTHINK/cbt_board) and copy the contents into the circut python folder on your desktop
 
 change the settings.toml file to your network (the board can only use 2.4GHz frequency)
+
 

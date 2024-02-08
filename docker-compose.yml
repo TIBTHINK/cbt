@@ -29,7 +29,7 @@ services:
     volumes:  
       - ./src:/app
     ports:
-      - "80:80"
+      - "3001:3001"
     environment:
       - MYSQL_HOST=db
       - MYSQL_USER=tibthink

@@ -26,6 +26,7 @@ show_help() {
   echo "  -R    remove all containers"
   echo "  -l    View logs for Node.js container."
   echo "  -h    Show this help menu."
+  echo "  -c    build the dockerfile"
   echo "If no option is provided, this help menu will be displayed."
 }
 
@@ -105,6 +106,13 @@ start_nodejs_terminal() {
   fi
 }
 
+build_dockerfile() {
+  echo "Building dockerfile..."
+  docker build -t cbt .
+  echo "Creating containers"
+  docker run -d -p 3001:3001 --name cbt cbt
+}
+
 # Function to view logs for Node.js
 view_nodejs_logs() {
   echo "Viewing logs for Node.js container..."
@@ -124,7 +132,7 @@ if [ $# -eq 0 ]; then
 fi
 
 # Process command-line options
-while getopts "uUsrtRhl" opt; do
+while getopts "uUsrtRhlc" opt; do
   case $opt in
     u)
       start_containers
@@ -146,6 +154,9 @@ while getopts "uUsrtRhl" opt; do
       ;;
     l)
       view_nodejs_logs
+      ;;
+    c)
+      build_dockerfile
       ;;
     h)
       show_help

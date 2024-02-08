@@ -101,7 +101,7 @@ app.get('/api', async (req, res) => {
 }
 );
 
-const PORT = 80;
+const PORT = 3001;
 server.listen(PORT, () => {
     const address = server.address();
     console.log(`Server is running on port ${address.port} `);
