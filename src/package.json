@@ -1,5 +1,5 @@
 {
-  "name": "c.u.m",
+  "name": "cbt",
   "version": "1.2.0",
   "description": "a simple website that keeps track of how many times ive been canceled",
   "main": "server.js",
