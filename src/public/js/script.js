@@ -108,6 +108,29 @@ async function fetchCurrentCount() {
   }
 }
 
+
+async function checkCount() {
+  try {
+      const response = await fetch('/api');
+      if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      const count = data.count[0].value;
+      if (count >= 1000000) {
+        var s = new SamJs();
+        s.speak("You did it!")
+        
+      }else{
+          console.log("test2");
+      }
+  } catch (error) {
+      console.error('An error occurred:', error);
+  }
+}
+
+
+
 async function incrementCounter(amount = 1, password = null, reason=true) {
   const counterElem = document.getElementById("counter");
   const currentCount = parseInt(counterElem.textContent, 10);
@@ -132,6 +155,8 @@ async function incrementCounter(amount = 1, password = null, reason=true) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ amount: amount, reason: reasonRespones }),
+      
+
     });
 
     if (!response.ok) {
@@ -220,3 +245,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("Error:", error);
   }
 });
+
+// make a function that checks if the counter has reaches 1 million and if so run console.log("You did it!")
+

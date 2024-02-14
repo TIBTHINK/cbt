@@ -85,7 +85,7 @@ app.get('/current-count', async (req, res) => {
 
 app.post('/increment', async (req, res) => {
     const amount = req.body.amount || 1; // default to 1 if amount is not provided
-    const reason = req.body.reason || "No reason provided"; // default to 1 if amount is not provided
+    const reason = req.body.reason || ""; 
     try {
         await connection.query(`UPDATE counter SET value = value + ${amount} WHERE id = 1`);
         const [rows] = await connection.query("SELECT value FROM counter WHERE id = 1");
