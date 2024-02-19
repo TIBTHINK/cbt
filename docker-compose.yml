@@ -20,7 +20,7 @@ services:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: Halsnewram
     ports:
-      - "8080:2002"
+      - "8080:8080"
     depends_on:
       - db
   nodejs:
