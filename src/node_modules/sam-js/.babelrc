@@ -1,0 +1,22 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+        "targets": {
+          "browsers": [
+            "> 0.5%",
+            "last 2 versions",
+            "Firefox ESR",
+            "not dead",
+            "not IE 11",
+            "maintained node versions"
+          ]
+        },
+        "modules": "auto"
+      }
+    ]
+  ],
+  "plugins": ["@babel/plugin-transform-runtime"],
+  "ignore": [
+    "dist/*.js"
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "name": "c.u.m",
+  "name": "cbt",
   "version": "1.2.0",
   "description": "a simple website that keeps track of how many times ive been canceled",
   "main": "server.js",
@@ -13,6 +13,8 @@
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "mysql2": "^3.6.2",
+    "sam-js": "^0.2.1",
+    "say": "^0.16.0",
     "socket.io": "^4.7.2"
   }
 }

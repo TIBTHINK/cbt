@@ -1,19 +1,5 @@
 #!/bin/bash
 
-# check if docker, docker-compose are installed
-if ! command -v docker &> /dev/null
-then
-    echo "docker could not be found"
-    exit
-fi
-
-if ! command -v docker-compose &> /dev/null
-then
-    echo "docker-compose could not be found"
-    exit
-fi
-
-
 # Function to show help menu
 show_help() {
   echo "Usage: $0 [option]"
@@ -26,7 +12,6 @@ show_help() {
   echo "  -R    remove all containers"
   echo "  -l    View logs for Node.js container."
   echo "  -h    Show this help menu."
-  echo "  -c    build the dockerfile"
   echo "If no option is provided, this help menu will be displayed."
 }
 
@@ -106,16 +91,14 @@ start_nodejs_terminal() {
   fi
 }
 
-build_dockerfile() {
-  echo "Building dockerfile..."
-  docker build -t cbt .
-  echo "Creating containers"
-  docker run -d -p 3001:3001 --name cbt cbt
-}
-
 # Function to view logs for Node.js
 view_nodejs_logs() {
   echo "Viewing logs for Node.js container..."
+
+
+
+#   SERVICE_NAME="cbt_nodejs_1"  # Replace with your actual service name
+
   docker logs -f cbt_nodejs_1
 }
 
@@ -132,7 +115,7 @@ if [ $# -eq 0 ]; then
 fi
 
 # Process command-line options
-while getopts "uUsrtRhlc" opt; do
+while getopts "uUsrtRhl" opt; do
   case $opt in
     u)
       start_containers
@@ -154,9 +137,6 @@ while getopts "uUsrtRhlc" opt; do
       ;;
     l)
       view_nodejs_logs
-      ;;
-    c)
-      build_dockerfile
       ;;
     h)
       show_help
