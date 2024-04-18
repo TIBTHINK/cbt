@@ -21,7 +21,11 @@ services:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: rassword
     ports:
+<<<<<<< HEAD
+      - "8080:8080"
+=======
       - "8080:80"
+>>>>>>> 2aca1a14cef403dd0b343cbfe728cb0d65ad67a7
     depends_on:
       - db
   nodejs:
