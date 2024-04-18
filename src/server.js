@@ -6,13 +6,13 @@ const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server);
 
-console.log('Cancel Ben Tsardoulias counter is online and...');
+console.log('Counting ur mistakes is online and...');
 
 // For parsing application/json
 app.use(bodyParser.json());
 
 
-let counter = 0; // replace this with your actual initial value
+let counter = 0; 
 
 io.on('connection', (socket) => {
     // Emit initialData event with the initial data
